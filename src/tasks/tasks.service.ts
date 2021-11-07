@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { v4 as uuid } from 'uuid';
 
 import { CreateTaskDto } from './create-task.dto';
+import { GetTasksFilterDto } from './get-task.dto';
 import { Task, TaskStatus } from './task.model';
 import { UpdateTaskDto } from './update-task.dto';
 
@@ -15,6 +16,24 @@ export class TasksService {
 
   public getTaskById(id: string): Task {
     return this.tasks.find((task) => task.id === id);
+  }
+
+  public getTaskskWithFilters(filterDto: GetTasksFilterDto): Task[] {
+    const { status, search } = filterDto;
+    let tasks = this.getAllTasks();
+    if (status) {
+      tasks = tasks.filter((task) => task.status === status);
+    }
+
+    if (search) {
+      tasks = tasks.filter((task) => {
+        if (task.title.includes(search) || task.description.includes(search)) {
+          return true;
+        }
+        return false;
+      });
+    }
+    return tasks;
   }
 
   public createTask(createTaskDto: CreateTaskDto): Task {
