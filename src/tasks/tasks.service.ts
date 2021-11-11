@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
+import { UpdateTaskStatusDto } from './dto/update-task.dto';
 import { Task } from './task.entity';
 import { TaskStatus } from './task.status.enum';
 import { TaskRepository } from './tasks.repository';
@@ -48,23 +48,17 @@ export class TasksService {
     return this.taskRepository.createTask(createTaskDto);
   }
 
-  // public updateTask(id: string, updateTaskDto: UpdateTaskDto): Task {
-  //   this.tasks = this.tasks.map((task) => {
-  //     if (task.id === id) {
-  //       for (const key in task) {
-  //         if (Object.prototype.hasOwnProperty.call(task, key)) {
-  //           if (updateTaskDto[key]) {
-  //             task[key] = updateTaskDto[key];
-  //           }
-  //         }
-  //       }
-  //     }
-  //     return task;
-  //   });
-  //   return this.getTaskById(id);
-  // }
-  public deleteTaskById(id: string): void {
-    this.getTaskById(id);
-    this.taskRepository.delete(id);
+  async updateTask(id: string, status: TaskStatus): Promise<Task> {
+    const task = await this.getTaskById(id);
+    task.status = status;
+    await this.taskRepository.save(task);
+    return task;
+  }
+
+  async deleteTaskById(id: string): Promise<void> {
+    const result = await this.taskRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Task with ID "${id}" not found`);
+    }
   }
 }
