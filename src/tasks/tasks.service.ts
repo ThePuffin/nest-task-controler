@@ -43,17 +43,11 @@ export class TasksService {
   //   }
   //   return tasks;
   // }
-  // public createTask(createTaskDto: CreateTaskDto): Task {
-  //   const { title, description } = createTaskDto;
-  //   const task: Task = {
-  //     id: uuid(),
-  //     title,
-  //     description,
-  //     status: TaskStatus.OPEN,
-  //   };
-  //   this.tasks.push(task);
-  //   return task;
-  // }
+
+  createTask(createTaskDto: CreateTaskDto): Promise<Task> {
+    return this.taskRepository.createTask(createTaskDto);
+  }
+
   // public updateTask(id: string, updateTaskDto: UpdateTaskDto): Task {
   //   this.tasks = this.tasks.map((task) => {
   //     if (task.id === id) {
@@ -69,8 +63,8 @@ export class TasksService {
   //   });
   //   return this.getTaskById(id);
   // }
-  // public deleteTaskById(id: string): void {
-  //   this.getTaskById(id);
-  //   this.tasks = this.tasks.filter((task) => task.id !== id);
-  // }
+  public deleteTaskById(id: string): void {
+    this.getTaskById(id);
+    this.taskRepository.delete(id);
+  }
 }
