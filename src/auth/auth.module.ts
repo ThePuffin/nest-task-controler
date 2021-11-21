@@ -15,7 +15,7 @@ import { UsersRepository } from './users.repository';
     TypeOrmModule.forFeature([UsersRepository]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
-      imports: [ConfigService],
+      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
         return {
