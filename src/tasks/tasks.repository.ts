@@ -8,8 +8,8 @@ import { Task } from './task.entity';
 import { TaskStatus } from './task.status.enum';
 
 @EntityRepository(Task)
-export class TaskRepository extends Repository<Task> {
-  private logger = new Logger('TaskRepository');
+export class TasksRepository extends Repository<Task> {
+  private logger = new Logger('TasksRepository');
   async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
     const { title, description } = createTaskDto;
 
